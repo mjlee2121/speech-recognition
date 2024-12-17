@@ -1,36 +1,47 @@
 import React, {useState, useEffect} from 'react'
+let recognition = null
+
+if (window.SpeechRecognition || window.webkitSpeechRecognition){
+  recognition = new window.webkitSpeechRecognition() || new window.webkitSpeechRecognition()
+  recognition.continuous = true
+  recognition.interimResults = true;
+  recognition.lang = "en-US"
+} else{
+  console.log("webkitSpeechRecognition is not supported in this browser")
+}
 
 const useSpeechRecognitionHooks = () => {
-  let recognition = null
-  
 
-  if (window.SpeechRecognition || window.webkitSpeechRecognition){
-    recognition = new webkitSpeechRecognition()
-    recognition.continuous = true
-    recognition.interimResults = true;
-    recognition.lang = "en-US"
-  } else{
-    console.log("webkitSpeechRecognition is not supported in this browser")
-  }
-
-  
   const [text, setText] = useState("")
   const [isListening, setIsListening] = useState(false)
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!recognition) {
-      console.log("recognition doesn't exist")
-      return
-    } else{
-      console.log("recognition exists", recognition)
+      console.log("Recognition doesn't exist");
+      return;
     }
 
-    recognition.onresult = (event) =>{
-      console.log('onresult event', event)
-      recognition.stop()
-      setIsListening(false)
-    }
-  },[])
+    recognition.onresult = (event) => {
+      let interimText = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          setText((prev) => prev + transcript + " ");
+        } else {
+          interimText += transcript;
+        }
+      }
+      console.log("Interim Text: ", interimText);
+    };
+
+    // Restart recognition if stopped automatically
+    recognition.onend = () => {
+      if (isListening) {
+        recognition.start();
+        console.log("Recognition restarted");
+      }
+    };
+  }, [isListening]);
 
   const startListening = () => {
     setText('')
@@ -46,9 +57,10 @@ const useSpeechRecognitionHooks = () => {
 
   return {
     text,
-    isListening,
     startListening,
-    hasRecognitionSupport
+    stopListening,
+    isListening,
+    hasRecognitionSupport,
   }
   
 }

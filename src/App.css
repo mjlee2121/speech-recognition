@@ -16,3 +16,11 @@
 .App-link {
   color: #61dafb;
 }
+
+.recording-button {
+  background: green;
+  width: 120px;
+  height: 60px;
+  color: black;
+  border-radius: 6px;
+}
