@@ -1,9 +1,7 @@
+/* default */
 .App {
   text-align: center;
-}
-
-.App-header {
-  background-color: #282c34;
+  background: linear-gradient(#D0D6D6, #86B9B0, #062630);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -17,10 +15,59 @@
   color: #61dafb;
 }
 
+
+/* recording related */
 .recording-button {
-  background: green;
+  background: rgb(124, 252, 124);
   width: 120px;
   height: 60px;
   color: black;
   border-radius: 6px;
+  cursor: pointer;
+}
+.font {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.recording-button:hover {
+  background: rgb(52, 240, 52);
+  width: 120px;
+  height: 60px;
+  color: black;
+  border-radius: 6px;
+}
+
+.add-button {
+  background: rgb(112, 244, 112);
+  padding: 5px;
+  width: 120px;
+  height: 60px;
+  color: black;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-button:hover {
+  background: rgb(56, 164, 56);
+  width: 120px;
+  height: 60px;
+  color: black;
+  border-radius: 6px;
+}
+
+
+/* nav */
+.navstyles .navbar {
+  background-color: red;
+}
+
+.navstyles .navList {
+  background-color: orange;
+}
+
+.navstyles .li{
+  background-color: yellow;
+}
+
+.navstyles .link{
+
 }
