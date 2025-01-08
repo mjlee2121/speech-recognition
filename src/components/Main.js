@@ -3,7 +3,6 @@ import useSpeechRecognitionHooks from '../hooks/useSpeechRecognitionHooks'
 import { reportWebVitals } from 'web-vitals';
 import TaskTable from './TaskTable';
 import Calendar from './Calendar';
-import TempCalendar from './TempCalendar';
 
 const Main = () => {
 
@@ -22,8 +21,7 @@ const Main = () => {
   return (
     <div>
       <Calendar />
-      <TaskTable text={text}/>
-      {hasRecognitionSupport ? 
+      {/* {hasRecognitionSupport ? 
       (
         <div>
           <button className='recording-button' onClick={startListening}>Start listening</button>
@@ -34,8 +32,8 @@ const Main = () => {
         </div>
       ) : (
         <h1>Your browser has no speech recognition support</h1>
-      )}
-      <button className='add-button' onClick={addToDailyTask}>Add to <br />Daily Task</button>
+      )} */}
+      {/* <button className='add-button' onClick={addToDailyTask}>Add to <br />Daily Task</button> */}
 
     </div>
   )

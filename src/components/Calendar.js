@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TaskTable from './TaskTable';
 
 // Helper function to generate dates for the current month
 const generateCalendar = (year, month) => {
@@ -19,13 +20,9 @@ const generateCalendar = (year, month) => {
   return dates;
 };
 
-
-
-
 const Calendar = () => {
-
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null); // Selected date
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -38,16 +35,16 @@ const Calendar = () => {
     setCurrentDate(new Date(year, month + 1, 1));
   };
 
-  const handleDateClick = (day)=> {
+  const handleDateClick = (day) => {
     if (day) {
-      setSelectedDate(new Date(year, month, day))
+      setSelectedDate(new Date(year, month, day)); // Set selected date when clicked
     }
-  }
+  };
 
   const dates = generateCalendar(year, month);
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   return (
@@ -56,8 +53,8 @@ const Calendar = () => {
         {monthNames[month]} {year}
       </h2>
       <div>
-        <button onClick={handlePrevMonth}>Previous</button>
-        <button onClick={handleNextMonth}>Next</button>
+        <button className="prev-next-button" onClick={handlePrevMonth}>Previous</button>
+        <button className="prev-next-button" onClick={handleNextMonth}>Next</button>
       </div>
 
       <div style={styles.tableHeader}>
@@ -70,52 +67,39 @@ const Calendar = () => {
 
         {/* Dates */}
         {dates.map((date, index) => (
-          <div key={index} 
-          onClick={()=>handleDateClick(date)}
-          style={{...styles.tableContent,
-            cursor: date ? 'pointer' : 'default'
-          }}>
+          <div
+            key={index}
+            onClick={() => handleDateClick(date)}
+            style={{
+              ...styles.tableContent,
+              cursor: date ? 'pointer' : 'default',
+              backgroundColor: selectedDate && selectedDate.getDate() === date ? 'rgba(255, 255, 255, 0.39)' : ''
+            }}
+          >
             {date || ''}
-            {/* Render red dot if the date is selected */}
-            {selectedDate && selectedDate.getDate()===date && (
-              <div style={styles.redDot}></div>
-            )}
           </div>
         ))}
       </div>
-      {/* display selected date */}
-      {selectedDate && (
-        <div style={{marginTop: '20px'}}>
-          <strong>selectedDate : </strong> {selectedDate.toDateString()}
-        </div>
-      )}
+
+      {/* Display TaskTable component and pass the selected date */}
+      <TaskTable selectedDate={selectedDate} />
     </div>
   );
 };
 
-const styles ={
-  tableHeader:
-  { 
-    display: 'grid', 
+const styles = {
+  tableHeader: {
+    display: 'grid',
     gridTemplateColumns: 'repeat(7, 1fr)',
-    gap: '10px', 
-    marginTop: '20px' 
+    gap: '10px',
+    marginTop: '20px'
   },
-  tableContent:
-  { 
-      padding: '10px', 
-      textAlign: 'center', 
-      border: '1px solid #ccc',
-  },
-  redDot: {
-    position: 'absolute',
-    bottom: '5px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    backgroundColor: 'red',
+  tableContent: {
+    padding: '10px',
+    textAlign: 'center',
+    border: '1px solid #ccc',
+    position: 'relative'
   }
-}
+};
+
 export default Calendar;

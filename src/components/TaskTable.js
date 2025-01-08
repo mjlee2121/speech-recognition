@@ -1,63 +1,69 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-const TaskTable = (text) => {
-  console.log('my text',text)
-  const [inputValue, setInputValue] = useState({priority:"", task:""})
-  const [priorityNum, setPriorityNum] = useState(1)
-  const [tableData, setTableData] = useState([])
+const TaskTable = ({ selectedDate }) => {
+  // Store the input value and table data
+  const [inputValue, setInputValue] = useState({ priority: "", task: "" });
+  const [tableData, setTableData] = useState({});
 
-  const handleInputChange = (e) =>{
-    const {name, value} = e.target
-    setInputValue({...inputValue, [name]:value})
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
 
-  }
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.task && selectedDate) {
+      const dateKey = selectedDate.toDateString(); // Use the selected date as the key
 
-  const handleSubmit = (e)=>{
-    e.preventDefault()
-    if (inputValue.task){
-      setTableData([...tableData, inputValue])
-      setInputValue({priority:"",task:""})
+      // Update the tableData with task and priority for the selected date
+      setTableData({ ...tableData, [dateKey]: inputValue });
+
+      // Reset input fields after submission
+      setInputValue({ priority: "", task: "" });
     }
-  }
+  };
 
   return (
     <div>
       {/* Input Form */}
       <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="priority"
-            value={inputValue.priority}
-            onChange={handleInputChange}
-            placeholder="Enter Priority"
-          />
-          <input
-            type="text"
-            name="task"
-            value={inputValue.task}
-            onChange={handleInputChange}
-            placeholder="Enter Task"
-          />
-          <button type="submit">Add to Table</button>
-        </form>
+        <input
+          type="text"
+          name="priority"
+          value={inputValue.priority}
+          onChange={handleInputChange}
+          placeholder="Enter Priority"
+        />
+        <input
+          type="text"
+          name="task"
+          value={inputValue.task}
+          onChange={handleInputChange}
+          placeholder="Enter Task"
+        />
+        <button type="submit">Add to Table</button>
+      </form>
 
-        {/* Table */}
-        <table border="1" style={styles.table}>
-          <thead>
+      {/* Table */}
+      <table border="1" style={styles.table}>
+        <thead>
+          <tr>
+            <th style={{ width: "20%" }}>Priority</th>
+            <th style={{ width: "80%" }}>Task</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Display task and priority for the selected date */}
+          {selectedDate && tableData[selectedDate.toDateString()] && (
             <tr>
-              <th style={{ width: "20%" }}>Priority</th>
-              <th style={{ width: "80%" }}>Task</th>
+              <td>{tableData[selectedDate.toDateString()].priority}</td>
+              <td>{tableData[selectedDate.toDateString()].task}</td>
             </tr>
-          </thead>
-          <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index}>
-                <td>{row.priority}</td>
-                <td>{row.task}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -77,4 +83,4 @@ const styles = {
   },
 };
 
-export default TaskTable
+export default TaskTable;

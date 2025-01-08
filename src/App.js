@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <div className="App">
-        <Navigation />
+        {/* <Navigation /> */}
 
       {/* 
         <section id="monthly-task">

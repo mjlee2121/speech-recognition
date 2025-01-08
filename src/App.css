@@ -15,7 +15,23 @@
   color: #61dafb;
 }
 
-
+/* calendar related */
+.prev-next-button {
+  background: rgb(124, 252, 124);
+  width: 120px;
+  height: 30px;
+  color: black;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.prev-next-button:hover {
+  background: rgb(52, 240, 52);
+  width: 120px;
+  height: 30px;
+  color: black;
+  border-radius: 6px;
+  cursor: pointer;
+}
 /* recording related */
 .recording-button {
   background: rgb(124, 252, 124);
