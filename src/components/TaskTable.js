@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 const TaskTable = ({ onTaskSubmit, tasks }) => {
-  const [inputValue, setInputValue] = useState({ priority: '', task: '' });
-
+  const [inputValue, setInputValue] = useState({ priority: '', task: '', status:'' });
+  const [status, setStatus] = useState()
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputValue({ ...inputValue, [name]: value });
@@ -41,8 +42,9 @@ const TaskTable = ({ onTaskSubmit, tasks }) => {
       <table border="1" style={styles.table}>
         <thead>
           <tr>
-            <th style={{ width: '20%' }}>Priority</th>
-            <th style={{ width: '80%' }}>Task</th>
+            <th style={{ width: '15%' }}>Priority</th>
+            <th style={{ width: '70%' }}>Task</th>
+            <th style={{ width: '15%' }}>Status</th>
           </tr>
         </thead>
         <tbody>
