@@ -22,7 +22,8 @@ const generateCalendar = (year, month) => {
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null); // Selected date
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [tasksByDate, setTasksByDate] = useState({}); // Store tasks by date
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -37,26 +38,41 @@ const Calendar = () => {
 
   const handleDateClick = (day) => {
     if (day) {
-      setSelectedDate(new Date(year, month, day)); // Set selected date when clicked
+      const clickedDate = new Date(year, month, day);
+      setSelectedDate(clickedDate);
+    }
+  };
+
+  const handleTaskSubmit = (task) => {
+    if (selectedDate) {
+      const dateKey = selectedDate.toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
+      setTasksByDate((prev) => ({
+        ...prev,
+        [dateKey]: task, // Add or update task for the selected date
+      }));
     }
   };
 
   const dates = generateCalendar(year, month);
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
   return (
     <div>
-      <h2>
-        {monthNames[month]} {year}
-      </h2>
-      <div>
-        <button className="prev-next-button" onClick={handlePrevMonth}>Previous</button>
-        <button className="prev-next-button" onClick={handleNextMonth}>Next</button>
+      <div style={styles.header}>
+        <button className="prev-next-button" onClick={handlePrevMonth}>
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h2>
+          {monthNames[month]} {year}
+        </h2>
+        <button className="prev-next-button" onClick={handleNextMonth}>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </div>
-
+      
       <div style={styles.tableHeader}>
         {/* Days of the week */}
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
@@ -66,28 +82,55 @@ const Calendar = () => {
         ))}
 
         {/* Dates */}
-        {dates.map((date, index) => (
-          <div
-            key={index}
-            onClick={() => handleDateClick(date)}
-            style={{
-              ...styles.tableContent,
-              cursor: date ? 'pointer' : 'default',
-              backgroundColor: selectedDate && selectedDate.getDate() === date ? 'rgba(255, 255, 255, 0.39)' : ''
-            }}
-          >
-            {date || ''}
-          </div>
-        ))}
+        {dates.map((date, index) => {
+          const dateKey = new Date(year, month, date).toISOString().split('T')[0];
+          return (
+            <div
+              key={index}
+              onClick={() => handleDateClick(date)}
+              style={{
+                ...styles.tableContent,
+                cursor: date ? 'pointer' : 'default',
+                position: 'relative',
+                backgroundColor:
+                  selectedDate &&
+                  selectedDate.getDate() === date &&
+                  selectedDate.getMonth() === month
+                    ? 'rgba(255, 255, 255, 0.39)'
+                    : '',
+              }}
+            >
+              {date || ''}
+              {/* Render red dot if there's a task for this date */}
+              {tasksByDate[dateKey] && (
+                <div style={styles.redDot}></div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Display TaskTable component and pass the selected date */}
-      <TaskTable selectedDate={selectedDate} />
+      {/* Display selected date's task table */}
+      {selectedDate && (
+        <div style={{ marginTop: '20px' }}>
+          <TaskTable
+            onTaskSubmit={handleTaskSubmit}
+            tasks={tasksByDate[selectedDate.toISOString().split('T')[0]] || []}
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 const styles = {
+  header:{
+    display: 'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    gap:'10px',
+    marginBottom:'20px'
+  },
   tableHeader: {
     display: 'grid',
     gridTemplateColumns: 'repeat(7, 1fr)',
@@ -99,6 +142,14 @@ const styles = {
     textAlign: 'center',
     border: '1px solid #ccc',
     position: 'relative'
+  },
+  redDot:{
+    position: 'absolute',
+    borderRadius:'50%',
+    left: '50%',
+    width: '8px',
+    height: '8px',
+    backgroundColor: 'red'
   }
 };
 
